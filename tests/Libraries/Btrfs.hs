@@ -1,4 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
 module Libraries.Btrfs (tests) where
 
 import System.Linux.Btrfs (snapshot)
