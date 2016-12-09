@@ -11,6 +11,7 @@ import Test.Tasty ( TestTree
 
 import Common.TestOpts (testVolDescr)
 import qualified Libraries.Btrfs as LB
+import qualified Libraries.TinyLog as LT
 
 main :: IO ()
 main = defaultMainWithIngredients ingredients tests
@@ -18,4 +19,4 @@ main = defaultMainWithIngredients ingredients tests
         testVolIngredient = includingOptions [testVolDescr]
 
 tests :: TestTree
-tests = testGroup "Collected" [LB.tests]
+tests = testGroup "Collected" [LB.tests, LT.tests]
