@@ -1,6 +1,7 @@
 module Common.Helpers
        ( assertDirectoryExists
        , assertDirectoryExistsNot
+       , contentOfLoggerOnTempFile
        , destroySubvolRo
        , withTmpVol
        ) where
@@ -11,7 +12,9 @@ import System.IO.Error (isPermissionError)
 import System.Process (callCommand)
 import System.Directory (doesDirectoryExist)
 import System.FilePath ((</>))
+import System.IO.Temp (withSystemTempDirectory)
 import System.Linux.Btrfs (createSubvol, destroySubvol)
+import System.Logger (Output(Path), close, new, setOutput)
 import System.Random (newStdGen, randomRs)
 import Test.Tasty (askOption)
 import Test.Tasty.HUnit (Assertion, (@?), testCaseSteps)
@@ -54,3 +57,10 @@ withTmpVol testFun title = askOption $ \vol -> testCaseSteps title $ \step ->
             step $ "Destroying subvolume: " ++ rootVol
             destroySubvol rootVol
             assertDirectoryExistsNot rootVol
+
+contentOfLoggerOnTempFile settings f = withSystemTempDirectory "btrbkp" g
+  where g d = do let fname = d </> "logfile"
+                 logger <- (new . setOutput (Path fname)) settings
+                 f logger
+                 close logger
+                 readFile fname

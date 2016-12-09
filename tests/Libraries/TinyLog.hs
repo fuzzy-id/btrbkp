@@ -7,6 +7,8 @@ import Test.Tasty (TestTree)
 import Test.Tasty.HUnit ((@=?), (@?=), testCase)
 import Test.Tasty.TH (testGroupGenerator)
 
+import Common.Helpers
+
 import Prelude hiding (log)
 import System.Logger 
 
@@ -26,10 +28,3 @@ case_log_to_file_and_read_back =
 
 case_level_Trace_not_logged_by_default = contentOfLoggerOnTempFile defSettings f >>= (@?= "")
   where f logger = log logger Trace (msg "foo")
-
-contentOfLoggerOnTempFile settings f = withSystemTempDirectory "btrbkp" g
-  where g d = do let fname = d </> "logfile"
-                 logger <- (new . setOutput (Path fname)) settings
-                 f logger
-                 close logger
-                 readFile fname
