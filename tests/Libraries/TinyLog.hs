@@ -1,8 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Libraries.TinyLog (tests) where
 
-import System.FilePath ((</>))
-import System.IO.Temp (withSystemTempDirectory)
 import Test.Tasty (TestTree)
 import Test.Tasty.HUnit ((@=?), (@?=), testCase)
 import Test.Tasty.TH (testGroupGenerator)
