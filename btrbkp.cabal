@@ -37,9 +37,10 @@ test-suite tests
                        btrbkp,
                        filepath,
                        directory            >=1.2  && <1.3,
-                       process              >=1.4  && <1.5,
+                       ini                  >=0.3  && <0.4,
                        lens                 >=4.14 && <4.15,
                        mtl                  >=2.2  && <2.3,
+                       process              >=1.4  && <1.5,
                        random               >=1.1  && <1.2,
                        tagged               >=0.8  && <0.9,
                        tasty                >=0.11 && <0.12,
@@ -48,4 +49,5 @@ test-suite tests
                        tasty-hunit          >=0.9  && <0.10,
                        temporary            >=1.2  && <1.3,
                        tinylog              >=0.14 && <0.15,
+                       unordered-containers >=0.2  && <0.3,
                        unix
