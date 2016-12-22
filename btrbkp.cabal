@@ -17,16 +17,20 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Btrbkp,
+                       Btrbkp.Config,
                        Exec.Btrbkp
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base                 >=4.9  && <4.10,
+                       attoparsec           >=0.13 && <0.14,
                        btrfs                >=0.1  && <0.2,
                        filepath             >=1.4  && <1.5,
                        hourglass            >=0.2  && <0.3,
+                       ini                  >=0.3  && <0.4,
                        lens                 >=4.14 && <4.15,
                        mtl                  >=2.2  && <2.3,
                        optparse-applicative >=0.12 && <0.13,
+                       text                 >=1.2  && <1.3,
                        tinylog              >=0.14 && <0.15,
                        transformers         >=0.5  && <0.6,
                        unix                 >=2.7  && <2.8
@@ -47,22 +51,24 @@ test-suite tests
   default-language:    Haskell2010
   ghc-options:         -W -fno-warn-missing-signatures -fprof-auto
   build-depends:       base,
-                       btrfs,
                        btrbkp,
+                       attoparsec,
+                       btrfs,
                        filepath,
                        directory            >=1.2  && <1.3,
-                       ini                  >=0.3  && <0.4,
+                       ini,
                        hourglass,
                        lens,
                        mtl,
                        process              >=1.4  && <1.5,
                        random               >=1.1  && <1.2,
                        tagged               >=0.8  && <0.9,
+                       text,
                        tinylog,
+                       unordered-containers >=0.2  && <0.3,
+                       unix,
                        tasty                >=0.11 && <0.12,
                        tasty-th             >=0.1  && <0.2,
                        tasty-quickcheck     >=0.8  && <0.9,
                        tasty-hunit          >=0.9  && <0.10,
-                       temporary            >=1.2  && <1.3,
-                       unordered-containers >=0.2  && <0.3,
-                       unix
+                       temporary            >=1.2  && <1.3
