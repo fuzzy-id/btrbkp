@@ -16,7 +16,7 @@ import System.IO.Temp (withSystemTempDirectory)
 import System.Linux.Btrfs (createSubvol, destroySubvol)
 import System.Logger (Logger(), Output(Path), Settings(), close, new, setOutput)
 import System.Random (newStdGen, randomRs)
-import Test.Tasty (askOption)
+import Test.Tasty (TestName(), TestTree(), askOption)
 import Test.Tasty.HUnit (Assertion, (@?), testCaseSteps)
 
 import Common.TestOpts (testVol)
@@ -38,6 +38,7 @@ destroySubvolRo vol = catchJust
                                   destroySubvol vol)
   where mkVolRW = "btrfs property set -t subvol " ++ vol ++ " ro false"
 
+withTmpVol :: (FilePath -> (String -> IO ()) -> IO a) -> TestName -> TestTree
 withTmpVol testFun title = askOption $ \vol -> testCaseSteps title $ \step ->
   if testVol vol == ""
     then step "Skipping (no test-vol passed)"
