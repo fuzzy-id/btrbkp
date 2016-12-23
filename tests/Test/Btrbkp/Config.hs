@@ -28,3 +28,11 @@ case_read_with_destinations = res @?= expected
                                                    , "destinations: bar"
                                                    , "sources:"
                                                    ]
+
+case_read_with_sources = res @?= expected
+  where
+    expected = Right (BtrbkpConfig [] [BtrbkpSource "baz"])
+    res = configFromIni =<< (parseIni . T.unlines) [ "[btrbkp]"
+                                                   , "destinations:"
+                                                   , "sources: baz"
+                                                   ]
