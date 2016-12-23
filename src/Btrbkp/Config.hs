@@ -9,9 +9,10 @@ import System.FilePath (FilePath())
 data BtrbkpConfig = BtrbkpConfig { destinations :: [BtrbkpDestination]
                                  , sources      :: [BtrbkpSource]
                                  }
+                                 deriving (Eq,Show)
 
-newtype BtrbkpDestination = BtrbkpDestination Text
-newtype BtrbkpSource = BtrbkpSource Text
+newtype BtrbkpDestination = BtrbkpDestination Text deriving (Eq,Show)
+newtype BtrbkpSource = BtrbkpSource Text deriving (Eq,Show)
 
 configFromIni :: Ini -> Either String BtrbkpConfig
 configFromIni ini = BtrbkpConfig <$> (createDestinations ini) <*> (createSources ini)

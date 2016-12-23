@@ -16,6 +16,7 @@ import qualified Libraries.Ini as LI
 import qualified Libraries.Lens as LL
 import qualified Libraries.TinyLog as LT
 import qualified Test.Btrbkp as TB
+import qualified Test.Btrbkp.Config as TBC
 
 main :: IO ()
 main = defaultMainWithIngredients ingredients tests
@@ -23,4 +24,4 @@ main = defaultMainWithIngredients ingredients tests
         testVolIngredient = includingOptions [testVolDescr]
 
 tests :: TestTree
-tests = testGroup "Collected" [LB.tests, LH.tests, LI.tests, LL.tests, LT.tests, TB.tests]
+tests = testGroup "Collected" [LB.tests, LH.tests, LI.tests, LL.tests, LT.tests, TB.tests, TBC.tests]
