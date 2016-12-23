@@ -30,6 +30,9 @@ elif [[ "${1}" == "setup" ]]; then
     sudo mount -t btrfs -o user_subvol_rm_allowed "${DEV}" "${MNT}"
     sudo btrfs subvolume create "${VOL}"
     sudo chown ${USER}.${USER} "${VOL}"
+    echo "Run tests via"
+    echo
+    echo "${0} '${VOL}'"
 else
     cabal test \
           --show-details=always \
