@@ -1,18 +1,22 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Btrbkp.Config where
 
+import Control.Lens (makeLenses)
 import qualified Data.Attoparsec.Text as P
 import Data.Ini (Ini(), parseValue)
 import Data.Text (Text())
 import System.FilePath (FilePath())
 
-data BtrbkpConfig = BtrbkpConfig { destinations :: [BtrbkpDestination]
-                                 , sources      :: [BtrbkpSource]
+newtype BtrbkpDestination = BtrbkpDestination Text deriving (Eq,Show)
+newtype BtrbkpSource = BtrbkpSource Text deriving (Eq,Show)
+
+data BtrbkpConfig = BtrbkpConfig { _destinations :: [BtrbkpDestination]
+                                 , _sources      :: [BtrbkpSource]
                                  }
                                  deriving (Eq,Show)
 
-newtype BtrbkpDestination = BtrbkpDestination Text deriving (Eq,Show)
-newtype BtrbkpSource = BtrbkpSource Text deriving (Eq,Show)
+makeLenses ''BtrbkpConfig
 
 configFromIni :: Ini -> Either String BtrbkpConfig
 configFromIni ini = BtrbkpConfig <$> (createDestinations ini) <*> (createSources ini)
