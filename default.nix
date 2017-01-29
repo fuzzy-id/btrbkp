@@ -2,7 +2,7 @@
 , hourglass, ini, lens, mtl, optparse-applicative, process, random
 , stdenv, tagged, tasty, tasty-hunit, tasty-quickcheck, tasty-th
 , temporary, text, tinylog, transformers, unix
-, unordered-containers
+, unordered-containers, uuid
 }:
 mkDerivation {
   pname = "btrbkp";
@@ -12,7 +12,7 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [
     attoparsec base btrfs filepath hourglass ini lens mtl
-    optparse-applicative text tinylog transformers unix
+    optparse-applicative process text tinylog transformers unix uuid
   ];
   executableHaskellDepends = [ base ];
   testHaskellDepends = [
