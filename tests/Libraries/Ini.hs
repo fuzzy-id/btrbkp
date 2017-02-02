@@ -9,7 +9,7 @@ import GHC.IO.Exception (IOErrorType(NoSuchThing), ioe_type)
 import System.FilePath ((</>))
 import System.IO.Temp (withSystemTempDirectory)
 import Test.Tasty (TestTree)
-import Test.Tasty.HUnit ((@=?), (@?=), testCase)
+import Test.Tasty.HUnit ((@?=), testCase)
 import Test.Tasty.TH (testGroupGenerator)
 
 import Data.Ini
