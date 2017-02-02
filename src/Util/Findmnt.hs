@@ -1,7 +1,7 @@
 module Util.Findmnt where
 
 import Data.Bifunctor (first)
-import Data.UUID (UUID(), fromString)
+import System.Linux.Btrfs.UUID (UUID(), fromString)
 import System.Exit (ExitCode(ExitSuccess))
 import System.Process (readProcessWithExitCode)
 
