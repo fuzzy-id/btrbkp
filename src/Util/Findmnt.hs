@@ -1,12 +1,13 @@
 module Util.Findmnt where
 
 import Data.Bifunctor (first)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import System.Linux.Btrfs.UUID (UUID(), fromString)
 import System.Exit (ExitCode(ExitSuccess))
 import System.Process (readProcessWithExitCode)
 
-findmnt :: FilePath -> IO (Either String UUID)
-findmnt t = do (code,out,err) <- readProcessWithExitCode "findmnt" args ""
+findmnt :: MonadIO m => FilePath -> m (Either String UUID)
+findmnt t = do (code,out,err) <- liftIO (readProcessWithExitCode "findmnt" args "")
                (return . prefixError) (checkResult code out err)
   where
     args = ["--output", "UUID", "--target", t]
