@@ -5,13 +5,13 @@ import Data.Ini (Ini(), sections)
 import Data.Text (isPrefixOf)
 
 import Btrbkp.FrontEnd.Snapshots (snapshotsFrontEnd)
-import Btrbkp.Types (BtrbkpT, FrontEndModule(..))
+import Btrbkp.Types (Btrbkp(), FrontEndModule(..))
 
 
-planAllBkps :: MonadIO m => Ini -> m [BtrbkpT m]
+planAllBkps :: MonadIO m => Ini -> m [Btrbkp m]
 planAllBkps cfg = concat <$> mapM ($ cfg) [configureFrontEnd snapshotsFrontEnd]
 
-configureFrontEnd :: MonadIO m => FrontEndModule c -> Ini -> m [BtrbkpT m]
+configureFrontEnd :: MonadIO m => FrontEndModule c -> Ini -> m [Btrbkp m]
 configureFrontEnd mod cfg = concat <$> mapM (planer mod) configs
   where
     relevantSects = (filter (name mod `isPrefixOf`) . sections) cfg

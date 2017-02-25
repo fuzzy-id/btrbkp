@@ -25,7 +25,7 @@ main = do opts <- execParser optsDesc
           cfg <- errorOnLeft <$> (readIniFile . configFile) opts
           env <- createEnv cfg
           plan <- planAllBkps cfg
-          excs <- catMaybes <$> mapM (runBtrbkpT env) plan
+          excs <- catMaybes <$> mapM (runBtrbkp env) plan
           if (length excs == 0)
              then exitWith ExitSuccess
              else (die . show) excs

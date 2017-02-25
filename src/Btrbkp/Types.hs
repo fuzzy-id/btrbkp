@@ -1,11 +1,13 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Btrbkp.Types ( BtrbkpEnv(..)
+                    , Btrbkp()
                     , BtrbkpT()
                     , FrontEndModule(..)
                     , backupRoot
                     , logger
                     , destinationBuilder
+                    , runBtrbkp
                     , runBtrbkpT
                     ) where
 
@@ -21,11 +23,12 @@ import System.Logger (Logger(), flush)
 data BkpException = SomeException
                   deriving (Eq,Show)
 
-type BtrbkpT m = ExceptT BkpException (ReaderT BtrbkpEnv m) ()
+type BtrbkpT m r = ExceptT BkpException (ReaderT BtrbkpEnv m) r
+type Btrbkp m = BtrbkpT m ()
 
 data FrontEndModule c = FrontEndModule { name      :: Text
                                        , configure :: Ini -> Text -> Either String c
-                                       , planer    :: forall m. MonadIO m => c -> m [BtrbkpT m]
+                                       , planer    :: forall m. MonadIO m => c -> m [Btrbkp m]
                                        }
 
 data BtrbkpEnv = BtrbkpEnv { _logger             :: Logger
@@ -35,9 +38,12 @@ data BtrbkpEnv = BtrbkpEnv { _logger             :: Logger
 
 makeLenses ''BtrbkpEnv
 
-runBtrbkpT :: MonadIO m => BtrbkpEnv -> BtrbkpT m -> m (Maybe BkpException)
-runBtrbkpT env bkp = do res <- (runReaderT . runExceptT) bkp env
-                        flush (env ^. logger)
-                        case res of
-                          Right () -> return Nothing
-                          Left e   -> (return . Just) e
+runBtrbkpT :: BtrbkpT m r -> BtrbkpEnv -> m (Either BkpException r)
+runBtrbkpT = runReaderT . runExceptT
+
+runBtrbkp :: MonadIO m => BtrbkpEnv -> Btrbkp m -> m (Maybe BkpException)
+runBtrbkp env bkp = do res <- (runBtrbkpT) bkp env
+                       flush (env ^. logger)
+                       case res of
+                         Right () -> return Nothing
+                         Left e   -> (return . Just) e

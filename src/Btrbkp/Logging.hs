@@ -19,6 +19,6 @@ import Btrbkp.Types
 msgTo :: String -> String -> Msg -> Msg
 msgTo s d = msg (s ++ " -> " ++ d)
 
-bkpLog :: MonadIO m => Level -> (Msg -> Msg) -> BtrbkpT m
+bkpLog :: MonadIO m => Level -> (Msg -> Msg) -> Btrbkp m
 bkpLog lvl msg = do l <- view logger
                     liftIO (log l lvl msg)
