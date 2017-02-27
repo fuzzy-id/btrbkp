@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
-module Btrbkp.Config where
+module Btrbkp.Config (createEnv) where
 
 import Data.Bifunctor (first)
 import Data.Hourglass (timePrint)
@@ -19,8 +19,9 @@ import Btrbkp.Logging
 
 createEnv :: MonadIO m => Ini -> m BtrbkpEnv
 createEnv cfg = BtrbkpEnv <$> createLogger cfg
-                          <*> createDestinationBuilder cfg
-                          <*> pure (getDestination cfg)
+                          <*> pure (createBackupRoot cfg)
+                          <*> createTimestamp cfg
+                          <*> pure (createSeparator cfg)
 
 createLogger :: MonadIO m => Ini -> m Logger
 createLogger cfg = (new . setOutput output . setLogLevel level) defSettings
@@ -35,24 +36,27 @@ createLogger cfg = (new . setOutput output . setLogLevel level) defSettings
     mapLevel "info" = Info
     lvlDef = "info"
 
-createDestinationBuilder :: MonadIO m => Ini -> m (Text -> FilePath -> FilePath)
-createDestinationBuilder cfg =
-    do timestamp <- timePrint tsfmt <$> liftIO dateCurrent
-       let dest = getDestination cfg
-       return (\n s -> dest </> timestamp ++ sep ++ unpack n ++ sep ++ normalize s)
+createTimestamp :: MonadIO m => Ini -> m String
+createTimestamp cfg = timePrint tsfmt <$> liftIO dateCurrent
   where
     tsfmt = unpack $ lookupIniWithDefault tsfmtDef cfg cfgSect tsfmtKey
     cfgSect = pack "btrbkp"
     tsfmtKey = pack "timestampfmt"
     tsfmtDef = pack "YYYY-MM-DD_H-MI-S"
-    sep = ":"
 
-getDestination cfg = (either error unpack) destination
+createSeparator :: Ini -> String
+createSeparator cfg = unpack (lookupIniWithDefault (pack ":") cfg mainSect (pack "separator"))
+
+createBackupRoot :: Ini -> FilePath
+createBackupRoot = queryMainConfig "destination"
+
+queryMainConfig :: Text -> Ini -> String
+queryMainConfig key cfg = (either error unpack) result
   where
-    destination = lookupValue cfgSect "destination" cfg
-    cfgSect = pack "btrbkp"
+    result = lookupValue mainSect key cfg
 
-normalize d = (foldr1 (\x y -> x ++ '-':y) . filter ((/= 0) . length) . map (filter (not . isPathSeparator)) . splitDirectories) d
+mainSect :: Text
+mainSect = pack "btrbkp"
 
 
 lookupIniWithDefault :: Text -> Ini -> Text -> Text -> Text

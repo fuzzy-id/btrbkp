@@ -6,7 +6,8 @@ module Btrbkp.Types ( BtrbkpEnv(..)
                     , FrontEndModule(..)
                     , backupRoot
                     , logger
-                    , destinationBuilder
+                    , timestamp
+                    , separator
                     , runBtrbkp
                     , runBtrbkpT
                     ) where
@@ -31,9 +32,10 @@ data FrontEndModule c = FrontEndModule { name      :: Text
                                        , planer    :: forall m. MonadIO m => c -> m [Btrbkp m]
                                        }
 
-data BtrbkpEnv = BtrbkpEnv { _logger             :: Logger
-                           , _destinationBuilder :: Text -> FilePath -> FilePath
-                           , _backupRoot         :: FilePath
+data BtrbkpEnv = BtrbkpEnv { _logger     :: Logger
+                           , _backupRoot :: FilePath
+                           , _timestamp  :: String
+                           , _separator  :: String
                            }
 
 makeLenses ''BtrbkpEnv
