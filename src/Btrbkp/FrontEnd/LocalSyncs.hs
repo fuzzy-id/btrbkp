@@ -28,7 +28,7 @@ localSync :: MonadIO m => FilePath -> Btrbkp m
 localSync src = do syncDir <- syncDirBuilder frontEndName normalized
                    syncDirExists <- (liftIO . doesDirectoryExist) syncDir
                    unless syncDirExists (liftIO (createSubvol syncDir))
-                   rsync src syncDir
+                   rsyncLocal src syncDir
                    backupSnapshot frontEndName syncDir normalized
   where
     normalized = normalize src
