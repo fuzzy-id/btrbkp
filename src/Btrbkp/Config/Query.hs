@@ -8,13 +8,18 @@ import Data.Text (Text(), pack, unpack)
 import Data.Text.Read (decimal)
 
 queryIntWithDefault :: Int -> Ini -> Text -> Text -> Either String Int
-queryIntWithDefault def cfg sect key = (readValue sect key decimal cfg)
+queryIntWithDefault def cfg sect key = if hasKey cfg sect key
+                                          then readValue sect key decimal cfg
+                                          else Right def
 
 querySingleWithDefault :: Text -> Ini -> Text -> Text -> Either String Text
 querySingleWithDefault def ini sect key =
-    if Right True == fmap (elem key) (keys sect ini)
+    if hasKey ini sect key
        then lookupValue sect key ini
        else Right def
+
+hasKey :: Ini -> Text -> Text -> Bool
+hasKey cfg sect key = Right True == fmap (elem key) (keys sect cfg)
 
 queryList :: Ini -> Text -> Text -> Either String [Text]
 queryList ini sect key = parseValue sect key listP ini
