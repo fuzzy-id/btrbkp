@@ -28,11 +28,14 @@ createDestinationBuilder n s =
        return (bRoot </> timestamp ++ sep ++ unpack n ++ sep ++ normalize s)
 
 normalize :: FilePath -> FilePath    
-normalize d = (foldr1 (\x y -> x ++ '-':y) 
-               . filter ((/= 0) . length) 
-               . map (filter (not . isPathSeparator)) 
-               . splitDirectories
-               ) d
+normalize d = if length splitted == 0
+                 then "-"
+                 else foldr1 (\x y -> x ++ '-':y) splitted
+  where
+    splitted = (filter ((/= 0) . length)
+                . map (filter (not . isPathSeparator)) 
+                . splitDirectories
+                ) d
 
 syncDirBuilder :: MonadIO m => Text -> FilePath -> BtrbkpT m FilePath
 syncDirBuilder n s = do sep <- view separator
