@@ -47,11 +47,11 @@ rsyncLocal src dest = do bkpLog Info (msgTo src' dest)
      src' = addTrailingPathSeparator src
      
 
-rsyncRemote :: MonadIO m => String -> Int -> FilePath -> FilePath -> [String] -> Btrbkp m
-rsyncRemote host port path dest exArgs = do bkpLog Info (msgTo remotePath dest)
-                                            callRsync args
+rsyncRemote :: MonadIO m => String -> String -> Int -> FilePath -> FilePath -> [String] -> Btrbkp m
+rsyncRemote user host port path dest exArgs = do bkpLog Info (msgTo remotePath dest)
+                                                 callRsync args
   where
-    remotePath = host ++ '@' : addTrailingPathSeparator path
+    remotePath = user ++ '@' : host ++ ':' : addTrailingPathSeparator path
     args = exArgs ++ [remotePath, dest]
 
 callRsync :: MonadIO m => [String] -> Btrbkp m
